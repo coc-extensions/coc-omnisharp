@@ -1,0 +1,88 @@
+{
+    "name": "coc-omnisharp",
+    "displayName": "OmniSharp integration for coc.nvim",
+    "description": "OmniSharp integration, supports C# and VisualBasic.",
+    "author": "Yatao Li",
+    "license": "MIT",
+    "readme": "README.md",
+    "version": "0.0.1",
+    "publisher": "yatli",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/yatli/coc-omnisharp"
+    },
+    "engines": {
+        "coc": ">=0.0.72"
+    },
+    "keywords": [
+        "C#",
+        "csharp",
+        "VisualBasic",
+        "vb",
+        "coc.nvim",
+        "dotnet",
+        ".NET Core",
+        ".NET"
+    ],
+    "categories": [
+        "Programming Languages",
+        "Linters",
+        "coc.nvim"
+    ],
+    "activationEvents": [
+        "onLanguage:cs",
+        "onLanguage:vb"
+    ],
+    "main": "out/client/extension.js",
+    "files": [
+        "out",
+        "syntaxes",
+        "snippets",
+        "README.md",
+        "LICENSE",
+        "omnisharp"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "cs",
+                "aliases": [
+                    "CSharp",
+                    "C#"
+                ],
+                "extensions": [
+                    ".cs",
+                    ".csx"
+                ]
+            }
+        ],
+        "grammars": [],
+        "configuration": {
+            "type": "object",
+            "title": "OmniSharp Configuration",
+            "properties": {}
+        },
+        "snippets": [
+            {
+                "language": "cs",
+                "path": "./snippets/csharp.json"
+            }
+        ]
+    },
+    "scripts": {
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./"
+    },
+    "extensionDependencies": [],
+    "dependencies": {
+        "extract-zip": "^1.6.7",
+        "follow-redirects": "^1.7.0",
+        "rimraf": "^2.6.3",
+        "tunnel": "0.0.6"
+    },
+    "devDependencies": {
+        "@types/node": "^10.3.3",
+        "typescript": "^3.5.2",
+        "coc.nvim": "^0.0.72"
+    }
+}

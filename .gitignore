@@ -1,0 +1,9 @@
+*.zip
+PowerShellEditorServices/
+.pses
+node_modules
+out
+yarn.lock
+coc-*.tgz
+omnisharp.zip
+omnisharp

@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"noImplicitAny": true,
+		"noImplicitReturns": true,		
+		"target": "es6",
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"rootDir": "src",
+		"outDir": "out",
+		"lib": [ "es2016" ],
+		"sourceMap": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true
+	},
+	"exclude": [
+		"node_modules",
+		"server",
+		"Scratch.ts"
+	]
+}
