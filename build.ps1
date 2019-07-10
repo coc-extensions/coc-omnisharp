@@ -15,10 +15,6 @@ param(
     $Watch
 )
 
-if (!(Test-Path "$PSScriptRoot/PowerShellEditorServices")) {
-    & "$PSScriptRoot/downloadPSES.ps1"
-}
-
 if (!(Get-Command npm)) {
     throw "You must install Node.js & npm."
 }

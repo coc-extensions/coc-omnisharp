@@ -39,8 +39,7 @@
         "syntaxes",
         "snippets",
         "README.md",
-        "LICENSE",
-        "omnisharp"
+        "LICENSE"
     ],
     "contributes": {
         "languages": [
@@ -52,7 +51,18 @@
                 ],
                 "extensions": [
                     ".cs",
-                    ".csx"
+                    ".csx",
+                    ".cake"
+                ]
+            },
+            {
+                "id": "vb",
+                "aliases": [
+                    "VisualBasic",
+                    "VB"
+                ],
+                "extensions": [
+                    ".vb"
                 ]
             }
         ],

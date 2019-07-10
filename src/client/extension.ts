@@ -51,6 +51,7 @@ export async function activate(context: ExtensionContext) {
             fileEvents: [
                 workspace.createFileSystemWatcher('**/*.cs'),
                 workspace.createFileSystemWatcher('**/*.csx'),
+                workspace.createFileSystemWatcher('**/*.cake'),
                 workspace.createFileSystemWatcher('**/*.vb')
             ]
         }
