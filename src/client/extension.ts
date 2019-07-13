@@ -9,7 +9,7 @@ import * as net from 'net';
 import { commands, workspace, ExtensionContext, events } from 'coc.nvim';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, StreamInfo } from 'coc.nvim';
 import { fileURLToPath, sleep } from './utils'
-import platform = require('./platform')
+import {getPlatformDetails, OperatingSystem, omnisharpExe, downloadOmnisharp} from './platform';
 
 async function getCurrentSelection(mode: string) {
     let doc = await workspace.document
@@ -57,21 +57,31 @@ export async function activate(context: ExtensionContext) {
         }
     }
 
-    let omnisharpExe = platform.getOmnisharpAssemblyPath()
-
     if (!fs.existsSync(omnisharpExe)) {
         let item = workspace.createStatusBarItem(0, {progress: true})
         item.text = "Downloading OmniSharp"
         item.show()
-        await platform.downloadOmnisharp()
+        await downloadOmnisharp()
         item.dispose()
     }
 
-    let serverOptions: ServerOptions = {
-        command: omnisharpExe,
-        args: ["-lsp"],
-        options: { cwd: workspace.rootPath }
-    }
+    let platform = getPlatformDetails()
+
+    let serverOptions = (() => {
+        switch(platform.operatingSystem) {
+            case OperatingSystem.Windows:
+                return {
+                    command: omnisharpExe,
+                    args: ["-lsp"],
+                    options: { cwd: workspace.rootPath }
+                }
+            default:
+                return {
+                    command: "mono",
+                    args: [omnisharpExe, "-lsp"],
+                    options: { cwd: workspace.rootPath }
+                }
+        }})()
 
     // Create the language client and start the client.
     let client = new LanguageClient('cs', 'OmniSharp Language Server', serverOptions, clientOptions);

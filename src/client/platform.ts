@@ -79,18 +79,7 @@ const URL_Windows        = "https://github.com/OmniSharp/omnisharp-roslyn/releas
 const URL_Osx            = "https://github.com/OmniSharp/omnisharp-roslyn/releases/download/RELEASE/omnisharp-osx.zip"
 const URL_Linux          = "https://github.com/OmniSharp/omnisharp-roslyn/releases/download/RELEASE/omnisharp-linux-x64.zip"
 
-export function getOmnisharpAssemblyPath(): string {
-    let fname = (() => {
-        let platform = getPlatformDetails()
-        switch(platform.operatingSystem){
-            case OperatingSystem.Windows:
-                return "OmniSharp.exe"
-            default:
-                return "OmniSharp"
-        }
-    })()
-    return path.join(omnisharpDirectory, fname)
-}
+export const omnisharpExe = path.join(omnisharpDirectory, "OmniSharp.exe")
 
 export async function downloadOmnisharp() {
 

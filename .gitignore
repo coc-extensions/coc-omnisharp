@@ -7,3 +7,4 @@ yarn.lock
 coc-*.tgz
 omnisharp.zip
 omnisharp
+.netrwhist
