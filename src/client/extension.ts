@@ -6,10 +6,11 @@
 
 import fs = require('fs')
 import * as net from 'net';
+import path = require("path");
 import { commands, workspace, ExtensionContext, events } from 'coc.nvim';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, StreamInfo } from 'coc.nvim';
 import { fileURLToPath, sleep } from './utils'
-import {getPlatformDetails, OperatingSystem, omnisharpExe, downloadOmnisharp} from './platform';
+import {getPlatformDetails, OperatingSystem, omnisharpExe, downloadOmnisharp, omnisharpDirectory} from './platform';
 
 async function getCurrentSelection(mode: string) {
     let doc = await workspace.document
@@ -77,7 +78,7 @@ export async function activate(context: ExtensionContext) {
                 }
             default:
                 return {
-                    command: "mono",
+                    command: path.join(omnisharpDirectory, "bin", "mono"),
                     args: [omnisharpExe, "-lsp"],
                     options: { cwd: workspace.rootPath }
                 }
@@ -86,7 +87,7 @@ export async function activate(context: ExtensionContext) {
     // Create the language client and start the client.
     let client = new LanguageClient('cs', 'OmniSharp Language Server', serverOptions, clientOptions);
     let disposable = client.start();
-    // Push the disposable to the context's subscriptions so that the 
+    // Push the disposable to the context's subscriptions so that the
     // client can be deactivated on extension deactivation
     context.subscriptions.push(disposable);
 }

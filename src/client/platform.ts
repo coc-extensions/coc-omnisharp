@@ -73,13 +73,13 @@ function getAgent(protocol: string): Agent {
   return undefined
 }
 
-const omnisharpDirectory = path.join(__dirname, "..", "..", "omnisharp")
+export const omnisharpDirectory = path.join(__dirname, "..", "..", "omnisharp")
 const omnisharpZip       = omnisharpDirectory + ".zip"
 const URL_Windows        = "https://github.com/OmniSharp/omnisharp-roslyn/releases/download/RELEASE/omnisharp-win-x64.zip"
 const URL_Osx            = "https://github.com/OmniSharp/omnisharp-roslyn/releases/download/RELEASE/omnisharp-osx.zip"
 const URL_Linux          = "https://github.com/OmniSharp/omnisharp-roslyn/releases/download/RELEASE/omnisharp-linux-x64.zip"
 
-export const omnisharpExe = path.join(omnisharpDirectory, "OmniSharp.exe")
+export const omnisharpExe = path.join(omnisharpDirectory, "omnisharp", "OmniSharp.exe")
 
 export async function downloadOmnisharp() {
 
@@ -90,7 +90,7 @@ export async function downloadOmnisharp() {
     let platform = getPlatformDetails()
     let url = (()=>{
         switch(platform.operatingSystem) {
-            case OperatingSystem.Windows: return URL_Windows 
+            case OperatingSystem.Windows: return URL_Windows
             case OperatingSystem.Linux: return URL_Linux
             case OperatingSystem.MacOS: return URL_Osx
             default: throw "Unsupported operating system"
