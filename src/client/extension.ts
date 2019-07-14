@@ -9,7 +9,7 @@ import * as net from 'net';
 import { commands, workspace, ExtensionContext, events } from 'coc.nvim';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, StreamInfo } from 'coc.nvim';
 import { fileURLToPath, sleep } from './utils'
-import {getPlatformDetails, OperatingSystem, omnisharpExe, downloadOmnisharp, currentPlatform} from './platform';
+import {getPlatformDetails, OperatingSystem, omnisharpExe, downloadOmnisharp, currentPlatform, omnisharpRunScript} from './platform';
 
 async function getCurrentSelection(mode: string) {
     let doc = await workspace.document
@@ -65,15 +65,28 @@ export async function activate(context: ExtensionContext) {
         item.dispose()
     }
 
+    let directRun = omnisharpExe
     if (currentPlatform.operatingSystem !== OperatingSystem.Windows) {
-        fs.chmodSync(omnisharpExe, '755')
+        fs.chmodSync(omnisharpRunScript, '755')
+        directRun = omnisharpRunScript
     }
 
-    let serverOptions = {
-        command: omnisharpExe,
-        args: ["-lsp"],
-        options: { cwd: workspace.rootPath }
-    }
+    const config = workspace.getConfiguration('omnisharp')
+    const useDotnet = config.get<boolean>('useDotnet', true)
+
+    let serverOptions = 
+        useDotnet 
+        ?  {
+            command: "dotnet",
+            args: [omnisharpExe, "-lsp"],
+            options: { cwd: workspace.rootPath } 
+        }
+        :  {
+            command: directRun,
+            args: ["-lsp"],
+            options: { cwd: workspace.rootPath } 
+        }
+
 
     // Create the language client and start the client.
     let client = new LanguageClient('cs', 'OmniSharp Language Server', serverOptions, clientOptions);

@@ -47,34 +47,9 @@ export function getPlatformDetails(): IPlatformDetails {
     };
 }
 
-
-function getAgent(protocol: string): Agent {
-  let proxy = workspace.getConfiguration('http').get<string>('proxy', '')
-  let key = protocol.startsWith('https') ? 'HTTPS_PROXY' : 'HTTP_PROXY'
-  if (!proxy && process.env[key]) {
-    proxy = process.env[key].replace(/^https?:\/\//, '').replace(/\/$/, '')
-  }
-  if (proxy) {
-    let auth = proxy.includes('@') ? proxy.split('@', 2)[0] : ''
-    let parts = auth.length ? proxy.slice(auth.length + 1).split(':') : proxy.split(':')
-    if (parts.length > 1) {
-      let agent = tunnel.httpsOverHttp({
-        proxy: {
-          headers: {},
-          host: parts[0],
-          port: parseInt(parts[1], 10),
-          proxyAuth: auth
-        }
-      })
-      return agent
-    }
-  }
-
-  return undefined
-}
-
 export const currentPlatform = getPlatformDetails()
 export const omnisharpDirectory = path.join(__dirname, "..", "..", "omnisharp")
+export const omnisharpRunScript = path.join(omnisharpDirectory, "run")
 const omnisharpZip       = omnisharpDirectory + ".zip"
 const URL_Windows        = "https://github.com/OmniSharp/omnisharp-roslyn/releases/download/RELEASE/omnisharp-win-x64.zip"
 const URL_Osx            = "https://github.com/OmniSharp/omnisharp-roslyn/releases/download/RELEASE/omnisharp-osx.zip"
@@ -84,7 +59,7 @@ export const omnisharpExe = (() => {
     if (currentPlatform.operatingSystem === OperatingSystem.Windows)
         return path.join(omnisharpDirectory, "OmniSharp.exe")
     else
-        return path.join(omnisharpDirectory, "run")
+        return path.join(omnisharpDirectory, "omnisharp", "OmniSharp.exe")
 })()
 
 export async function downloadOmnisharp() {
