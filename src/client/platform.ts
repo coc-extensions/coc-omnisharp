@@ -83,10 +83,8 @@ const URL_Linux          = "https://github.com/OmniSharp/omnisharp-roslyn/releas
 export const omnisharpExe = (() => {
     if (currentPlatform.operatingSystem === OperatingSystem.Windows)
         return path.join(omnisharpDirectory, "OmniSharp.exe")
-
-    let script = path.join(omnisharpDirectory, "omnisharp", "run")
-    fs.chmodSync(script, '755')
-    return script
+    else
+        return path.join(omnisharpDirectory, "run")
 })()
 
 export async function downloadOmnisharp() {

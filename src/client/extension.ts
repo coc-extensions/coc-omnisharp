@@ -9,7 +9,7 @@ import * as net from 'net';
 import { commands, workspace, ExtensionContext, events } from 'coc.nvim';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, StreamInfo } from 'coc.nvim';
 import { fileURLToPath, sleep } from './utils'
-import {getPlatformDetails, OperatingSystem, omnisharpExe, downloadOmnisharp} from './platform';
+import {getPlatformDetails, OperatingSystem, omnisharpExe, downloadOmnisharp, currentPlatform} from './platform';
 
 async function getCurrentSelection(mode: string) {
     let doc = await workspace.document
@@ -63,6 +63,10 @@ export async function activate(context: ExtensionContext) {
         item.show()
         await downloadOmnisharp()
         item.dispose()
+    }
+
+    if (currentPlatform.operatingSystem !== OperatingSystem.Windows) {
+        fs.chmodSync(omnisharpExe, '755')
     }
 
     let serverOptions = {
