@@ -65,23 +65,11 @@ export async function activate(context: ExtensionContext) {
         item.dispose()
     }
 
-    let platform = getPlatformDetails()
-
-    let serverOptions = (() => {
-        switch(platform.operatingSystem) {
-            case OperatingSystem.Windows:
-                return {
-                    command: omnisharpExe,
-                    args: ["-lsp"],
-                    options: { cwd: workspace.rootPath }
-                }
-            default:
-                return {
-                    command: "mono",
-                    args: [omnisharpExe, "-lsp"],
-                    options: { cwd: workspace.rootPath }
-                }
-        }})()
+    let serverOptions = {
+        command: omnisharpExe,
+        args: ["-lsp"],
+        options: { cwd: workspace.rootPath }
+    }
 
     // Create the language client and start the client.
     let client = new LanguageClient('cs', 'OmniSharp Language Server', serverOptions, clientOptions);

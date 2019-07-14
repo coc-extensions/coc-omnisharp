@@ -73,13 +73,21 @@ function getAgent(protocol: string): Agent {
   return undefined
 }
 
-const omnisharpDirectory = path.join(__dirname, "..", "..", "omnisharp")
+export const currentPlatform = getPlatformDetails()
+export const omnisharpDirectory = path.join(__dirname, "..", "..", "omnisharp")
 const omnisharpZip       = omnisharpDirectory + ".zip"
 const URL_Windows        = "https://github.com/OmniSharp/omnisharp-roslyn/releases/download/RELEASE/omnisharp-win-x64.zip"
 const URL_Osx            = "https://github.com/OmniSharp/omnisharp-roslyn/releases/download/RELEASE/omnisharp-osx.zip"
 const URL_Linux          = "https://github.com/OmniSharp/omnisharp-roslyn/releases/download/RELEASE/omnisharp-linux-x64.zip"
 
-export const omnisharpExe = path.join(omnisharpDirectory, "OmniSharp.exe")
+export const omnisharpExe = (() => {
+    if (currentPlatform.operatingSystem === OperatingSystem.Windows)
+        return path.join(omnisharpDirectory, "OmniSharp.exe")
+
+    let script = path.join(omnisharpDirectory, "omnisharp", "run")
+    fs.chmodSync(script, '755')
+    return script
+})()
 
 export async function downloadOmnisharp() {
 
@@ -87,9 +95,8 @@ export async function downloadOmnisharp() {
         rimraf.sync(omnisharpDirectory)
     }
 
-    let platform = getPlatformDetails()
     let url = (()=>{
-        switch(platform.operatingSystem) {
+        switch(currentPlatform.operatingSystem) {
             case OperatingSystem.Windows: return URL_Windows 
             case OperatingSystem.Linux: return URL_Linux
             case OperatingSystem.MacOS: return URL_Osx
@@ -98,21 +105,6 @@ export async function downloadOmnisharp() {
     })().replace("RELEASE", "v1.33.0")
 
     fs.mkdirSync(omnisharpDirectory)
-
-    let endpoint = parse(url)
-    let agent = getAgent(endpoint.protocol)
-
-    let opts: RequestOptions = {
-        method: 'GET',
-        hostname: endpoint.hostname,
-        port: endpoint.port ? parseInt(endpoint.port, 10) : (endpoint.protocol === 'https:' ? 443 : 80),
-        path: endpoint.path,
-        protocol: url.startsWith('https') ? 'https:' : 'http:',
-        agent,
-        headers: {
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64)'
-        }
-    }
 
     await new Promise<void>((resolve, reject) => {
         const req = followRedirects.https.request(url, (res: IncomingMessage) => {
