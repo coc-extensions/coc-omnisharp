@@ -5,7 +5,6 @@
 'use strict';
 
 import fs = require('fs')
-import * as net from 'net';
 import { commands, workspace, ExtensionContext, events } from 'coc.nvim';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, StreamInfo } from 'coc.nvim';
 import { fileURLToPath, sleep } from './utils'
@@ -72,7 +71,7 @@ export async function activate(context: ExtensionContext) {
     }
 
     const config = workspace.getConfiguration('omnisharp')
-    const useDotnet = config.get<boolean>('useDotnet', true)
+    const useDotnet = config.get<boolean>('useDotnet', false)
 
     let serverOptions = 
         useDotnet 

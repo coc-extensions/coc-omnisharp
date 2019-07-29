@@ -75,7 +75,7 @@ export async function downloadOmnisharp() {
             case OperatingSystem.MacOS: return URL_Osx
             default: throw "Unsupported operating system"
         }
-    })().replace("RELEASE", "v1.33.0")
+    })().replace("RELEASE", "v1.34.0")
 
     fs.mkdirSync(omnisharpDirectory)
 
