@@ -6,9 +6,11 @@
 
 import fs = require('fs')
 import { commands, workspace, ExtensionContext, events } from 'coc.nvim';
-import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, StreamInfo } from 'coc.nvim';
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, StreamInfo, Uri } from 'coc.nvim';
 import { fileURLToPath, sleep } from './utils'
 import {getPlatformDetails, OperatingSystem, omnisharpExe, downloadOmnisharp, currentPlatform, omnisharpRunScript} from './platform';
+
+const logger = workspace.createOutputChannel("coc-omnisharp")
 
 async function getCurrentSelection(mode: string) {
     let doc = await workspace.document
@@ -39,11 +41,12 @@ async function getCurrentSelection(mode: string) {
 
 export async function activate(context: ExtensionContext) {
 
-	workspace.addRootPatterns('cs', ['*.cs', '*.csproj', '*.sln', '.vim', '.git', '.hg'])
+    logger.appendLine("coc-omnisharp activated.")
+    logger.appendLine(`workspace root=${workspace.rootPath}`)
 
     // Options to control the language client
     let clientOptions: LanguageClientOptions = {
-        // Register the server for powershell documents
+        // Register the server for C#/VB documents
         documentSelector: [{ scheme: 'file', language: 'cs' }, { scheme: 'file', language: 'vb'}],
         synchronize: {
             configurationSection: 'omnisharp',

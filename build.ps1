@@ -12,7 +12,12 @@ param(
     # Runs the watch npm command instead.
     [Parameter()]
     [switch]
-    $Watch
+    $Watch,
+
+    # Determines if we hack the compiled content into the installed plugin
+    [Parameter()]
+    [switch]
+    $Update
 )
 
 if (!(Get-Command npm)) {
@@ -34,4 +39,10 @@ if ($Test.IsPresent) {
 
 if ($Pack.IsPresent) {
     npm pack
+}
+
+if ($Update.IsPresent) {
+    Write-Host "Updating installed extension..."
+    Copy-Item out\client\* $env:LocalAppData\coc\extensions\node_modules\coc-omnisharp\out\client\
+    Copy-Item .\package.json $env:LocalAppData\coc\extensions\node_modules\coc-omnisharp\
 }

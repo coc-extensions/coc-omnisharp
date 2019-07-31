@@ -5,7 +5,7 @@
     "author": "Yatao Li",
     "license": "MIT",
     "readme": "README.md",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "publisher": "yatli",
     "repository": {
         "type": "git",
@@ -83,6 +83,28 @@
             {
                 "language": "cs",
                 "path": "./snippets/csharp.json"
+            }
+        ],
+        "rootPatterns": [
+            {
+                "filetype": "cs",
+                "patterns": [
+                    "*.csproj",
+                    "*.sln",
+                    ".vim",
+                    ".git",
+                    ".hg"
+                ]
+            },
+            {
+                "filetype": "vb",
+                "patterns": [
+                    "*.vbproj",
+                    "*.sln",
+                    ".vim",
+                    ".git",
+                    ".hg"
+                ]
             }
         ]
     },
