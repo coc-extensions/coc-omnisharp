@@ -114,6 +114,7 @@
     },
     "extensionDependencies": [],
     "dependencies": {
+        "vscode-jsonrpc": "^4.0.0",
         "extract-zip": "^1.6.7",
         "follow-redirects": "^1.7.0",
         "rimraf": "^2.6.3",
