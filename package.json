@@ -5,7 +5,7 @@
     "author": "Yatao Li",
     "license": "MIT",
     "readme": "README.md",
-    "version": "0.0.11",
+    "version": "0.0.16",
     "publisher": "yatli",
     "repository": {
         "type": "git",
@@ -114,11 +114,7 @@
     },
     "extensionDependencies": [],
     "dependencies": {
-        "vscode-jsonrpc": "^4.0.0",
-        "extract-zip": "^1.6.7",
-        "follow-redirects": "^1.7.0",
-        "rimraf": "^2.6.3",
-        "tunnel": "0.0.6"
+        "coc-utils": "0.0.5"
     },
     "devDependencies": {
         "@types/node": "^10.3.3",

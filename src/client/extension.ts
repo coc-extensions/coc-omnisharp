@@ -5,38 +5,22 @@
 'use strict';
 
 import fs = require('fs')
-import { commands, workspace, ExtensionContext, events } from 'coc.nvim';
-import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, StreamInfo, Uri } from 'coc.nvim';
-import { fileURLToPath, sleep } from './utils'
-import {getPlatformDetails, OperatingSystem, omnisharpExe, downloadOmnisharp, currentPlatform, omnisharpRunScript} from './platform';
+import { workspace, ExtensionContext } from 'coc.nvim';
+import { LanguageClient, LanguageClientOptions } from 'coc.nvim';
+
+import { LanguageServerRepository, LanguageServerProvider, ILanguageServerPackages } from 'coc-utils' 
 
 const logger = workspace.createOutputChannel("coc-omnisharp")
+const omnisharpRepo: LanguageServerRepository = {
+    kind : "github",
+    repo: "omnisharp/omnisharp-roslyn",
+    channel: "latest"
+}
 
-async function getCurrentSelection(mode: string) {
-    let doc = await workspace.document
-
-    if (mode === "v" || mode === "V") {
-        let [from, _ ] = await doc.buffer.mark("<")
-        let [to, __  ] = await doc.buffer.mark(">")
-        let result: string[] = []
-        for(let i = from; i <= to; ++i)
-        {
-            result.push(doc.getline(i - 1))
-        }
-        return result
-    }
-    else if (mode === "n") {
-        let line = await workspace.nvim.call('line', '.')
-        return [doc.getline(line - 1)]
-    }
-    else if (mode === "i") {
-        // TODO what to do in insert mode?
-    }
-    else if (mode === "t") {
-        //TODO what to do in terminal mode?
-    }
-
-    return []
+const omnisharpPacks: ILanguageServerPackages = {
+    "win-x64": { platformPath: "omnisharp-win-x64.zip", executable: "Omnisharp.exe" },
+    "linux-x64": { platformPath: "omnisharp-linux-x64.zip", executable: "run" },
+    "osx-x64": { platformPath: "omnisharp-osx-x64.zip", executable: "run" },
 }
 
 export async function activate(context: ExtensionContext) {
@@ -59,32 +43,13 @@ export async function activate(context: ExtensionContext) {
         }
     }
 
-    if (!fs.existsSync(omnisharpExe)) {
-        let item = workspace.createStatusBarItem(0, {progress: true})
-        item.text = "Downloading OmniSharp"
-        item.show()
-        await downloadOmnisharp()
-        item.dispose()
-    }
-
-    let directRun = omnisharpExe
-    if (currentPlatform.operatingSystem !== OperatingSystem.Windows) {
-        fs.chmodSync(omnisharpRunScript, '755')
-        directRun = omnisharpRunScript
-    }
-
+    const omnisharpProvider = new LanguageServerProvider(context, "OmniSharp", omnisharpPacks, omnisharpRepo)
+    const omnisharpExe = await omnisharpProvider.getLanguageServer()
     const config = workspace.getConfiguration('omnisharp')
-    const useDotnet = config.get<boolean>('useDotnet', false)
 
     let serverOptions = 
-        useDotnet 
-        ?  {
-            command: "dotnet",
-            args: [omnisharpExe, "-lsp"],
-            options: { cwd: workspace.rootPath } 
-        }
-        :  {
-            command: directRun,
+        {
+            command: omnisharpExe,
             args: ["-lsp"],
             options: { cwd: workspace.rootPath } 
         }
