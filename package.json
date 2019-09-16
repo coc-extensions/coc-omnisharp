@@ -5,7 +5,7 @@
     "author": "Yatao Li",
     "license": "MIT",
     "readme": "README.md",
-    "version": "0.0.16",
+    "version": "0.0.18",
     "publisher": "yatli",
     "repository": {
         "type": "git",
@@ -114,7 +114,7 @@
     },
     "extensionDependencies": [],
     "dependencies": {
-        "coc-utils": "0.0.5"
+        "coc-utils": "0.0.8"
     },
     "devDependencies": {
         "@types/node": "^10.3.3",
