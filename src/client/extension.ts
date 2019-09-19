@@ -20,7 +20,7 @@ const omnisharpRepo: LanguageServerRepository = {
 const omnisharpPacks: ILanguageServerPackages = {
     "win-x64": { platformPath: "omnisharp-win-x64.zip", executable: "Omnisharp.exe" },
     "linux-x64": { platformPath: "omnisharp-linux-x64.zip", executable: "run" },
-    "osx-x64": { platformPath: "omnisharp-osx-x64.zip", executable: "run" },
+    "osx-x64": { platformPath: "omnisharp-osx.zip", executable: "run" },
 }
 
 export async function activate(context: ExtensionContext) {
