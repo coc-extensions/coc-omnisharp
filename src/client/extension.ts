@@ -5,14 +5,14 @@
 'use strict';
 
 import fs = require('fs')
-import { workspace, ExtensionContext } from 'coc.nvim';
-import { LanguageClient, LanguageClientOptions } from 'coc.nvim';
+import {workspace, ExtensionContext, commands} from 'coc.nvim';
+import {LanguageClient, LanguageClientOptions} from 'coc.nvim';
 
-import { LanguageServerRepository, LanguageServerProvider, ILanguageServerPackages } from 'coc-utils' 
+import {LanguageServerRepository, LanguageServerProvider, ILanguageServerPackages, sleep} from 'coc-utils'
 
 const logger = workspace.createOutputChannel("coc-omnisharp")
 const omnisharpRepo: LanguageServerRepository = {
-    kind : "github",
+    kind: "github",
     repo: "omnisharp/omnisharp-roslyn",
     channel: "latest"
 }
@@ -31,7 +31,7 @@ export async function activate(context: ExtensionContext) {
     // Options to control the language client
     let clientOptions: LanguageClientOptions = {
         // Register the server for C#/VB documents
-        documentSelector: [{ scheme: 'file', language: 'cs' }, { scheme: 'file', language: 'vb'}],
+        documentSelector: [{scheme: 'file', language: 'cs'}, {scheme: 'file', language: 'vb'}],
         synchronize: {
             configurationSection: 'omnisharp',
             fileEvents: [
@@ -47,18 +47,32 @@ export async function activate(context: ExtensionContext) {
     const omnisharpExe = await omnisharpProvider.getLanguageServer()
     const config = workspace.getConfiguration('omnisharp')
 
-    let serverOptions = 
-        {
-            command: omnisharpExe,
-            args: ["-lsp"],
-            options: { cwd: workspace.rootPath } 
-        }
+    let serverOptions =
+    {
+        command: omnisharpExe,
+        args: ["-lsp"],
+        options: {cwd: workspace.rootPath}
+    }
 
 
     // Create the language client and start the client.
     let client = new LanguageClient('cs', 'OmniSharp Language Server', serverOptions, clientOptions);
-    let disposable = client.start();
+    let client_dispose = client.start();
     // Push the disposable to the context's subscriptions so that the 
     // client can be deactivated on extension deactivation
-    context.subscriptions.push(disposable);
+    context.subscriptions.push(client_dispose);
+
+    let cmd_updateomnisharp = commands.registerCommand('omnisharp.downloadLanguageServer', async () => {
+
+        if (client.started) {
+            await client.stop()
+            client_dispose.dispose()
+            await sleep(1000)
+        }
+        await omnisharpProvider.downloadLanguageServer()
+        client_dispose = client.start()
+        context.subscriptions.push(client_dispose)
+    })
+
+    context.subscriptions.push(cmd_updateomnisharp)
 }

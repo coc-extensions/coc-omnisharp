@@ -5,14 +5,14 @@
     "author": "Yatao Li",
     "license": "MIT",
     "readme": "README.md",
-    "version": "0.0.20",
+    "version": "0.0.22",
     "publisher": "yatli",
     "repository": {
         "type": "git",
         "url": "https://github.com/yatli/coc-omnisharp"
     },
     "engines": {
-        "coc": ">=0.0.72"
+        "coc": ">=0.0.73"
     },
     "keywords": [
         "C#",
@@ -114,11 +114,11 @@
     },
     "extensionDependencies": [],
     "dependencies": {
-        "coc-utils": "0.0.8"
+        "coc-utils": "0.0.10"
     },
     "devDependencies": {
         "@types/node": "^10.3.3",
         "typescript": "^3.5.2",
-        "coc.nvim": "^0.0.72"
+        "coc.nvim": "^0.0.73"
     }
 }
