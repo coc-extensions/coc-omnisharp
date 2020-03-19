@@ -26,6 +26,10 @@ if (!(Get-Command npm)) {
 
 npm install
 
+if (Test-Path .\out) {
+    Remove-Item -Recurse -Force .\out
+}
+
 if ($Watch.IsPresent) {
     npm run watch
     return
