@@ -43,9 +43,12 @@ export async function activate(context: ExtensionContext) {
         }
     }
 
-    const omnisharpProvider = new LanguageServerProvider(context, "OmniSharp", omnisharpPacks, omnisharpRepo)
-    const omnisharpExe = await omnisharpProvider.getLanguageServer()
     const config = workspace.getConfiguration('omnisharp')
+    const omnisharpCustomPath = config.get<string>('path')
+    const useCustomPath = omnisharpCustomPath.length > 0;
+
+    const omnisharpProvider = new LanguageServerProvider(context, "OmniSharp", omnisharpPacks, omnisharpRepo)
+    const omnisharpExe = useCustomPath ? omnisharpCustomPath : await omnisharpProvider.getLanguageServer();
 
     let serverOptions =
     {
@@ -70,6 +73,9 @@ export async function activate(context: ExtensionContext) {
             await sleep(1000)
         }
         await omnisharpProvider.downloadLanguageServer()
+        if (useCustomPath) {
+            workspace.showMessage(`coc-omnisharp: Using custom executable (${omnisharpCustomPath}) so the downloaded bundle will have no effect`, 'warning')
+        }
         client_dispose = client.start()
         context.subscriptions.push(client_dispose)
     })
