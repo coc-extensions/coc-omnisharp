@@ -71,11 +71,10 @@
             "type": "object",
             "title": "OmniSharp Configuration",
             "properties": {
-                "omnisharp.useDotnet": {
-                    "scope": "resource",
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Use 'dotnet' to start OmniSharp"
+                "omnisharp.path": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Use a custom executable instead of the included bundle"
                 }
             }
         },
