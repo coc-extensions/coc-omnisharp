@@ -5,12 +5,14 @@
 'use strict';
 
 import fs = require('fs')
-import {workspace, ExtensionContext, commands} from 'coc.nvim';
+import path = require('path')
+import {workspace, ExtensionContext, commands, RevealOutputChannelOn} from 'coc.nvim';
 import {LanguageClient, LanguageClientOptions} from 'coc.nvim';
 
 import {LanguageServerRepository, LanguageServerProvider, ILanguageServerPackages, sleep} from 'coc-utils'
 
 const logger = workspace.createOutputChannel("coc-omnisharp")
+const omnisharpLogger = workspace.createOutputChannel("omnisharp")
 const omnisharpRepo: LanguageServerRepository = {
     kind: "github",
     repo: "omnisharp/omnisharp-roslyn",
@@ -40,23 +42,41 @@ export async function activate(context: ExtensionContext) {
                 workspace.createFileSystemWatcher('**/*.cake'),
                 workspace.createFileSystemWatcher('**/*.vb')
             ]
-        }
+        },
+        outputChannel: omnisharpLogger,
     }
 
     const config = workspace.getConfiguration('omnisharp')
     const omnisharpCustomPath = config.get<string>('path')
+    const loglevel = config.get<string>('trace.server')
+    const debug = config.get<boolean>('debug.server')
     const useCustomPath = omnisharpCustomPath.length > 0;
 
     const omnisharpProvider = new LanguageServerProvider(context, "OmniSharp", omnisharpPacks, omnisharpRepo)
     const omnisharpExe = useCustomPath ? omnisharpCustomPath : await omnisharpProvider.getLanguageServer();
 
-    let serverOptions =
-    {
-        command: omnisharpExe,
-        args: ["-lsp"],
-        options: {cwd: workspace.rootPath}
+    // find the solution file
+    let sln = fs.readdirSync(workspace.rootPath)
+      .map(x => path.join(workspace.rootPath, x))
+      .find(x => x.endsWith(".sln") && fs.statSync(x).isFile())
+
+    logger.appendLine(`Solution file is: ${sln}`)
+
+    let args = ["-lsp", "-s", sln]
+    if (loglevel === "verbose") {
+      args.push("-v")
+      logger.appendLine("omnisharp verbose logging activated")
+    }
+    if (debug) {
+      args.push("--debug")
+      logger.appendLine("omnisharp debug mode activated")
     }
 
+    let serverOptions = {
+        command: omnisharpExe,
+        args: args,
+        options: {cwd: workspace.rootPath}
+    }
 
     // Create the language client and start the client.
     let client = new LanguageClient('cs', 'OmniSharp Language Server', serverOptions, clientOptions);
