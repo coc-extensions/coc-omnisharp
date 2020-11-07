@@ -62,7 +62,11 @@ export async function activate(context: ExtensionContext) {
 
     logger.appendLine(`Solution file is: ${sln}`)
 
-    let args = ["-lsp", "-s", sln]
+    let args = ["-lsp"]
+    if (sln !== undefined) {
+      args.push("-s")
+      args.push(sln)
+    }
     if (loglevel === "verbose") {
       args.push("-v")
       logger.appendLine("omnisharp verbose logging activated")
