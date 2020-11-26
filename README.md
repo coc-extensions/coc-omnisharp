@@ -25,6 +25,29 @@ Alternatively, you can have `coc.nvim` automatically install the extension if it
 let g:coc_global_extensions=[ 'coc-omnisharp', ... ]
 ```
 
+## Configuration
+
+
+You can call `:CocConfig` to edit configuration. Available options are:
+
+|          Key           |             Description            |           Type         |   Default   |
+| ---------------------- | ---------------------------------- | ---------------------- | ----------- |
+| omnisharp.version      | Download a specific version        | string                 | latest      |
+| omnisharp.path         | For use with existing installation | string                 |             |
+| omnisharp.trace.server | Specify trace level                | information \| verbose | information |
+| omnisharp.debug.server | Wait for debugger                  | boolean                | false       |
+
+#### Example configuration:
+
+```json
+{
+    "omnisharp.version": "v.1.37.3",
+    "omnisharp.trace.server": "information",
+    "omnisharp.debug.server": true
+}
+```
+
+
 ## Recommended plugins
 
 [vim-polyglot](https://github.com/sheerun/vim-polyglot) for syntax highlighting 🎨
