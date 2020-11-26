@@ -23,10 +23,11 @@ import {
 
 const logger = workspace.createOutputChannel("coc-omnisharp")
 const omnisharpLogger = workspace.createOutputChannel("omnisharp")
+const omnisharpVersion = workspace.getConfiguration('omnisharp').get<string>('version').toLowerCase();
 const omnisharpRepo: LanguageServerRepository = {
     kind: "github",
     repo: "omnisharp/omnisharp-roslyn",
-    channel: "latest"
+    channel: omnisharpVersion === "latest" ? omnisharpVersion : `tags/${omnisharpVersion}`
 }
 
 const omnisharpPacks: ILanguageServerPackages = {

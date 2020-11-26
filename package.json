@@ -71,6 +71,11 @@
             "type": "object",
             "title": "OmniSharp Configuration",
             "properties": {
+                "omnisharp.version": {
+                    "type": "string",
+                    "default": "latest",
+                    "description": "Download a specific OmniSharp-Roslyn version"
+                },
                 "omnisharp.path": {
                     "type": "string",
                     "default": "",
