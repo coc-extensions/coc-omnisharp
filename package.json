@@ -119,6 +119,7 @@
         ]
     },
     "scripts": {
+        "prepare": "npx npm-run-all compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./"
     },
