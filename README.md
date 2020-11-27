@@ -41,7 +41,7 @@ You can call `:CocConfig` to edit configuration. Available options are:
 
 ```json
 {
-    "omnisharp.version": "v.1.37.3",
+    "omnisharp.version": "v1.37.3"
     "omnisharp.trace.server": "information",
     "omnisharp.debug.server": true
 }
