@@ -1,22 +1,33 @@
 /* --------------------------------------------------------------------------------------------
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
- * ------------------------------------------------------------------------------------------ */
+ * ------------------------------------------------------------------------------------------
+ */
 'use strict';
 
-import fs = require('fs')
-import path = require('path')
-import {workspace, ExtensionContext, commands, RevealOutputChannelOn} from 'coc.nvim';
-import {LanguageClient, LanguageClientOptions} from 'coc.nvim';
-
-import {LanguageServerRepository, LanguageServerProvider, ILanguageServerPackages, sleep} from 'coc-utils'
+import fs from 'fs';
+import path from 'path';
+import {
+    ExtensionContext,
+    commands,
+    workspace,
+    LanguageClient,
+    LanguageClientOptions
+} from 'coc.nvim';
+import {
+    LanguageServerRepository,
+    LanguageServerProvider,
+    ILanguageServerPackages,
+    sleep
+} from 'coc-utils'
 
 const logger = workspace.createOutputChannel("coc-omnisharp")
 const omnisharpLogger = workspace.createOutputChannel("omnisharp")
+const omnisharpVersion = workspace.getConfiguration('omnisharp').get<string>('version').toLowerCase();
 const omnisharpRepo: LanguageServerRepository = {
     kind: "github",
     repo: "omnisharp/omnisharp-roslyn",
-    channel: "latest"
+    channel: omnisharpVersion === "latest" ? omnisharpVersion : `tags/${omnisharpVersion}`
 }
 
 const omnisharpPacks: ILanguageServerPackages = {
@@ -57,23 +68,23 @@ export async function activate(context: ExtensionContext) {
 
     // find the solution file
     let sln = fs.readdirSync(workspace.rootPath)
-      .map(x => path.join(workspace.rootPath, x))
-      .find(x => x.endsWith(".sln") && fs.statSync(x).isFile())
+        .map(x => path.join(workspace.rootPath, x))
+        .find(x => x.endsWith(".sln") && fs.statSync(x).isFile())
 
     logger.appendLine(`Solution file is: ${sln}`)
 
     let args = ["-lsp"]
     if (sln !== undefined) {
-      args.push("-s")
-      args.push(sln)
+        args.push("-s")
+        args.push(sln)
     }
     if (loglevel === "verbose") {
-      args.push("-v")
-      logger.appendLine("omnisharp verbose logging activated")
+        args.push("-v")
+        logger.appendLine("omnisharp verbose logging activated")
     }
     if (debug) {
-      args.push("--debug")
-      logger.appendLine("omnisharp debug mode activated")
+        args.push("--debug")
+        logger.appendLine("omnisharp debug mode activated")
     }
 
     let serverOptions = {
