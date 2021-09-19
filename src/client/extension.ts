@@ -11,6 +11,7 @@ import {
     ExtensionContext,
     commands,
     workspace,
+    window,
     LanguageClient,
     LanguageClientOptions
 } from 'coc.nvim';
@@ -21,8 +22,8 @@ import {
     sleep
 } from 'coc-utils'
 
-const logger = workspace.createOutputChannel("coc-omnisharp")
-const omnisharpLogger = workspace.createOutputChannel("omnisharp")
+const logger = window.createOutputChannel("coc-omnisharp")
+const omnisharpLogger = window.createOutputChannel("omnisharp")
 const omnisharpVersion = workspace.getConfiguration('omnisharp').get<string>('version').toLowerCase();
 const omnisharpRepo: LanguageServerRepository = {
     kind: "github",
@@ -109,7 +110,7 @@ export async function activate(context: ExtensionContext) {
         }
         await omnisharpProvider.downloadLanguageServer()
         if (useCustomPath) {
-            workspace.showMessage(`coc-omnisharp: Using custom executable (${omnisharpCustomPath}) so the downloaded bundle will have no effect`, 'warning')
+            window.showMessage(`coc-omnisharp: Using custom executable (${omnisharpCustomPath}) so the downloaded bundle will have no effect`, 'warning')
         }
         client_dispose = client.start()
         context.subscriptions.push(client_dispose)
