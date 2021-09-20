@@ -96,6 +96,7 @@ export async function activate(context: ExtensionContext) {
     if (process.arch === "arm64") {
       // desired command: mono --assembly-loader=strict Omnisharp.exe
       args.unshift('--assembly-loader=strict')
+      args.push(omnisharpExe)
 
       serverOptions = {
           command: "mono",
