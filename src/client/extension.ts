@@ -93,13 +93,13 @@ export async function activate(context: ExtensionContext) {
 
     let serverOptions;
 
-    if (process.arch === "arm64") {
+    if (omnisharpExe.indexOf("mono") !== -1) {
       // desired command: mono --assembly-loader=strict Omnisharp.exe
+      args.unshift(omnisharpExe)
       args.unshift('--assembly-loader=strict')
-      args.push(omnisharpExe)
 
       serverOptions = {
-          command: "/usr/local/bin/mono",
+          command: "mono",
           args: args,
           options: {cwd: workspace.rootPath}
       }
