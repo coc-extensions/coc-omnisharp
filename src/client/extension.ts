@@ -99,7 +99,7 @@ export async function activate(context: ExtensionContext) {
       args.push(omnisharpExe)
 
       serverOptions = {
-          command: "mono",
+          command: "/usr/local/bin/mono",
           args: args,
           options: {cwd: workspace.rootPath}
       }
