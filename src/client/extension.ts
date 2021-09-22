@@ -36,7 +36,7 @@ const omnisharpPacks: ILanguageServerPackages = {
     "win-x64": { platformPath: "omnisharp-win-x64.zip", executable: "Omnisharp.exe" },
     "linux-x64": { platformPath: "omnisharp-linux-x64.zip", executable: "run" },
     "osx-x64": { platformPath: "omnisharp-osx.zip", executable: "run" },
-    "osx-arm64": { platformPath: "omnisharp-mono.zip", executable: "Omnisharp.exe" },
+    "osx-arm64": { platformPath: "omnisharp-osx.zip", executable: "run" },
 }
 
 export async function activate(context: ExtensionContext) {
@@ -91,24 +91,10 @@ export async function activate(context: ExtensionContext) {
     }
 
 
-    let serverOptions;
-
-    if (omnisharpExe.indexOf("mono") !== -1) {
-      // desired command: mono --assembly-loader=strict Omnisharp.exe
-      args.unshift(omnisharpExe)
-      args.unshift('--assembly-loader=strict')
-
-      serverOptions = {
-          command: "mono",
-          args: args,
-          options: {cwd: workspace.rootPath}
-      }
-    } else {
-      serverOptions = {
-          command: omnisharpExe,
-          args: args,
-          options: {cwd: workspace.rootPath}
-      }
+    let serverOptions = {
+        command: omnisharpExe,
+        args: args,
+        options: {cwd: workspace.rootPath}
     }
 
 
