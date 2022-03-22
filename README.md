@@ -3,6 +3,7 @@
 ## ⛔ This project is lacking proper maintanence. I would recommend [csharp-ls](https://github.com/razzmatazz/csharp-language-server) at this moment.
 I may work on the integration of `csharp-ls` in the future, but now please manually set it up.
 
+`dotnet install --global csharp-ls`
 `:CocConfig`
 ```json
 {
