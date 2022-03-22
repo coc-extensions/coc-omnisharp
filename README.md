@@ -4,7 +4,9 @@
 I may work on the integration of `csharp-ls` in the future, but now please manually set it up.
 
 `dotnet install --global csharp-ls`
+
 `:CocConfig`
+
 ```json
 {
     "languageserver": {
