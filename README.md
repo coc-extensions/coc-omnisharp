@@ -1,5 +1,10 @@
 # coc-omnisharp
 
+## ⛔ This project is lacking proper maintanence. I would recommend [csharp-ls](https://www.nuget.org/packages/csharp-ls/0.1.2) at this moment.
+I may work on the integration of `csharp-ls` in the future, but now please manually set it up.
+
+=== Original README below ===
+
 A vim plugin powered by
 [OmniSharp](https://github.com/omnisharp/omnisharp-roslyn) and
 [coc.nvim](https://github.com/neoclide/coc.nvim).
