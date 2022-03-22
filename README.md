@@ -3,6 +3,19 @@
 ## ⛔ This project is lacking proper maintanence. I would recommend [csharp-ls](https://github.com/razzmatazz/csharp-language-server) at this moment.
 I may work on the integration of `csharp-ls` in the future, but now please manually set it up.
 
+`:CocConfig`
+```json
+{
+    "languageserver": {
+        "csharp-ls": {
+          "command": "csharp-ls",
+          "filetypes": ["cs"],
+          "rootPatterns": ["*.csproj", ".vim/", ".git/", ".hg/"]
+        }
+    }
+}
+```
+
 === Original README below ===
 
 A vim plugin powered by
