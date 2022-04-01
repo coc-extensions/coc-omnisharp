@@ -11,6 +11,7 @@ import {
     ExtensionContext,
     commands,
     workspace,
+    window,
     LanguageClient,
     LanguageClientOptions
 } from 'coc.nvim';
@@ -21,8 +22,8 @@ import {
     sleep
 } from 'coc-utils'
 
-const logger = workspace.createOutputChannel("coc-omnisharp")
-const omnisharpLogger = workspace.createOutputChannel("omnisharp")
+const logger = window.createOutputChannel("coc-omnisharp")
+const omnisharpLogger = window.createOutputChannel("omnisharp")
 const omnisharpVersion = workspace.getConfiguration('omnisharp').get<string>('version').toLowerCase();
 const omnisharpRepo: LanguageServerRepository = {
     kind: "github",
@@ -30,10 +31,12 @@ const omnisharpRepo: LanguageServerRepository = {
     channel: omnisharpVersion === "latest" ? omnisharpVersion : `tags/${omnisharpVersion}`
 }
 
+
 const omnisharpPacks: ILanguageServerPackages = {
     "win-x64": { platformPath: "omnisharp-win-x64.zip", executable: "Omnisharp.exe" },
     "linux-x64": { platformPath: "omnisharp-linux-x64.zip", executable: "run" },
     "osx-x64": { platformPath: "omnisharp-osx.zip", executable: "run" },
+    "osx-arm64": { platformPath: "omnisharp-osx.zip", executable: "run" },
 }
 
 export async function activate(context: ExtensionContext) {
@@ -87,11 +90,13 @@ export async function activate(context: ExtensionContext) {
         logger.appendLine("omnisharp debug mode activated")
     }
 
+
     let serverOptions = {
         command: omnisharpExe,
         args: args,
         options: {cwd: workspace.rootPath}
     }
+
 
     // Create the language client and start the client.
     let client = new LanguageClient('cs', 'OmniSharp Language Server', serverOptions, clientOptions);
@@ -109,7 +114,7 @@ export async function activate(context: ExtensionContext) {
         }
         await omnisharpProvider.downloadLanguageServer()
         if (useCustomPath) {
-            workspace.showMessage(`coc-omnisharp: Using custom executable (${omnisharpCustomPath}) so the downloaded bundle will have no effect`, 'warning')
+            window.showMessage(`coc-omnisharp: Using custom executable (${omnisharpCustomPath}) so the downloaded bundle will have no effect`, 'warning')
         }
         client_dispose = client.start()
         context.subscriptions.push(client_dispose)
