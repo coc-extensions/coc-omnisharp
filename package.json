@@ -131,6 +131,6 @@
     "devDependencies": {
         "@types/node": "^10.3.3",
         "typescript": "^3.5.2",
-        "coc.nvim": "^0.0.73"
+        "coc.nvim": "^0.0.83-next.9"
     }
 }
